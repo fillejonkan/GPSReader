@@ -8,3 +8,4 @@ gpsrecv
 .eap-install.cfg
 package.conf.orig
 param_old.conf
+tmp*

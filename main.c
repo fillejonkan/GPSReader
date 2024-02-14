@@ -27,6 +27,7 @@
 
 #include "ftplib.h"
 #include "metadata_stream.h"
+#include "overlay.h"
 
 #define LOG(fmt, args...)   { syslog(LOG_INFO, fmt, ## args); printf(fmt, ## args); }
 #define ERR(fmt, args...)   { syslog(LOG_ERR, fmt, ## args); printf(fmt, ## args); }
@@ -77,6 +78,11 @@ static char *ftp_pass = NULL;
 static char *ftp_server = NULL;
 static char *ftp_folder = NULL;
 static char *ftp_basename = NULL;
+
+/**
+* Handle for overlay instance
+*/
+static overlay_handle ovl_handle = NULL;
 
 /* raw EXIF header data */
 static const unsigned char exif_header[] = {
@@ -195,6 +201,31 @@ static gboolean udp_callback(GIOChannel *source,
 static int udp_init();
 void udp_destroy();
 
+static char *get_zulu_time()
+{
+    /**
+     * Retrieve current UTC time as needed by the API
+     */
+    char outstr[200];
+    time_t t;
+    struct tm *tmp;
+
+    t = time(NULL);
+    tmp = gmtime(&t);
+
+    if (tmp == NULL) {
+        ERR("Failed to get time value");
+        return NULL;
+    }
+
+    if (strftime(outstr, sizeof(outstr), "%FT%TZ", tmp) == 0) {
+        ERR("Failed to convert time");
+        return NULL;
+    }
+
+    return g_strdup(outstr);
+}
+
 int udp_init()
 {
   struct sockaddr_in si_me;
@@ -283,7 +314,8 @@ gboolean udp_callback(GIOChannel *source,
 
   nmea_zero_INFO(&info);
   
-  double d_lat, d_lon;
+  double d_lat = 0.0f;
+  double d_lon = 0.0f;
   
   nmea_parse(&nmea_udp.parser, (char *)udp_rcv, sizeof(udp_rcv), &info);
     
@@ -315,30 +347,6 @@ gboolean udp_callback(GIOChannel *source,
   }
 
   return TRUE;
-}
-
-static void update_dynamic_overlay(char *s)
-{
-    if (strlen(s) > OVERLAY_STR_SIZE) {
-        g_message("Overlay string to large %d > %d", strlen(s),
-            OVERLAY_STR_SIZE);
-        return;
-    }
-
-#if 0
-    /* Ignore return value if group is already created */
-    sc_create_group("DYNAMIC_TEXT_IS1", 512, 0);
-
-    struct sc_param sc_par = { .name="DYNAMIC_TEXT",
-                               .size=OVERLAY_BUF_SIZE,
-                               .data=s,
-                               .type=SC_STRING};
-
-    /* NULL-terminated list of pointers to param structs. we need just one */
-    struct sc_param *arr[2] = {&sc_par, 0};
-
-    sc_set_group("DYNAMIC_TEXT_IS1", arr, SC_CREATE);
-#endif
 }
 
 
@@ -450,8 +458,11 @@ static void update_overlay(double d_lat, double d_lon, double direction,
                               d_lat, H_lat, d_lon, H_lon,
                               get_heading(direction), speed * 0.621371);
 
-  update_dynamic_overlay(ovl_text);
+  char *time = get_zulu_time();
+
+  overlay_set_data(ovl_handle, NULL, time, ovl_text);
   free_string(ovl_text);
+  g_free(time);
 }
 
 static void set_api_key(const char *value)
@@ -818,9 +829,9 @@ static gboolean exif_timeout(gpointer data)
 {
     double lat;
     double lon;
-    double speed;
+    double speed = 0.0f;
     double elv;
-    double direction;
+    double direction = 0.0f;
     int init;
 
     int utc_year;
@@ -1162,6 +1173,7 @@ main(int argc, char *argv[])
   init_signals();
 
   FtpInit();
+  ovl_handle = overlay_init();
 
   loop = g_main_loop_new(NULL, FALSE);
 
