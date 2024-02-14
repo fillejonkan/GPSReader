@@ -75,6 +75,21 @@
                     "name": "FTPPass",
                     "default": "pass",
                     "type": "hidden:string"
+                },
+                {
+                    "name": "FTPServer",
+                    "default": "192.168.1.20",
+                    "type": "hidden:string"
+                },
+                {
+                    "name": "FTPFolder",
+                    "default": "images",
+                    "type": "hidden:string"
+                },
+                {
+                    "name": "FTPBaseName",
+                    "default": "image",
+                    "type": "hidden:string"
                 }
             ]
         }
