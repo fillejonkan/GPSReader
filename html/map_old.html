@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>AXIS GPS Receiver - Current Location</title>
+<style>
+html, body, #map-canvas {height: 100%; margin: 0px; padding: 0px;}
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script type="text/javascript" src="http://geoxml3.googlecode.com/svn/branches/polys/geoxml3.js"></script>
+<script type="text/javascript" src="http://geoxml3.googlecode.com/svn/trunk/ProjectedOverlay.js"></script>
+
+<script type="text/javascript">
+
+jQuery(document).ready(function () {       
+  var myOptions = {
+    zoom: 6,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  
+  var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+
+  var geoXml = new geoXML3.parser({
+    map: map,
+    singleInfoWindow: true
+  });
+
+  geoXml.parse('gps/history');
+  }
+);
+
+/*
+setInterval(function () {
+  if(geoXml != null) {
+    geoXML.hideDocument();
+    geoXml = new geoXML3.parser({map: map, singleInfoWindow: true});
+    geoXml.parse('gps/random');
+  }
+},5000);
+*/
+
+</script>
+
+</head>
+<body >
+  <div id="map_canvas" style="height: 100%; margin: 0px; padding: 0px;"></div>  
+</body>
+</html>

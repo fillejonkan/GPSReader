@@ -1,0 +1,4 @@
+administrator /settings/set
+viewer /settings/get
+viewer /gps/now
+viewer /gps/history

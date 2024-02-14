@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no"/>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>AXIS GPS Receiver - Current Location</title>
+<style>
+html, body, #map-canvas {height: 100%; margin: 0px; padding: 0px;}
+</style>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="geoxml3.js"></script>
+<script src="ProjectedOverlay.js"></script>
+
+<script type="text/javascript">
+
+function initMap()
+{
+    //here you can be sure that maps api has loaded
+    //and you can now proceed to render the map on page
+    
+        var map = new google.maps.Map(document.getElementById('map_canvas'), {
+          zoom: 6,
+          center: {lat: 55.717, lng: 13.219},
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+        });
+
+        var geoXml = new geoXML3.parser({
+            map: map,
+            singleInfoWindow: true
+        });
+
+        geoXml.parse('gps/history');
+        
+}
+
+jQuery(document).ready(function () {       
+    var api_key = location.hash.replace(/#/, "");
+    var js_file = document.createElement('script');
+    js_file.type = 'text/javascript';
+    js_file.src = 'https://maps.googleapis.com/maps/api/js?callback=initMap&key=' + api_key;
+    document.getElementsByTagName('head')[0].appendChild(js_file);
+  }
+);
+
+/*
+setInterval(function () {
+  if(geoXml != null) {
+    geoXML.hideDocument();
+    geoXml = new geoXML3.parser({map: map, singleInfoWindow: true});
+    geoXml.parse('gps/random');
+  }
+},5000);
+*/
+
+</script>
+
+</head>
+<body >
+  <div id="map_canvas" style="height: 100%; margin: 0px; padding: 0px;"></div>  
+</body>
+</html>

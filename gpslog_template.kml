@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.2">
+<Document>
+	<name>gps.log</name>
+	<description><![CDATA[]]></description>
+	<Style id="style_line">
+		<LineStyle>
+		<color>73FF0000</color><width>5</width>
+		</LineStyle>
+	</Style>
+	
+	<Placemark>
+		<name>Path</name>
+		<description><![CDATA[]]></description>
+		<styleUrl>#style_line</styleUrl>
+		<LineString>
+			<tessellate>1</tessellate>
+			<coordinates>
+55.717756,13.215984,0.000000
+55.718076,13.216510,0.000000
+55.718106,13.221816,0.000000
+55.717284,13.221918,0.000000
+55.717284,13.221918,0.000000
+55.717443,13.216610,0.000000
+55.717756,13.215984,0.000000
+      </coordinates>  
+    </LineString>  
+  </Placemark>
+</Document>
+</kml>

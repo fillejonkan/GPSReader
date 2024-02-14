@@ -1,0 +1,84 @@
+{
+    "schemaVersion": "1.0",
+    "acapPackageConf": {
+        "setup": {
+            "friendlyName": "AXIS GPS Receiver",
+            "architecture": "mipsisa32r2el",
+            "appName": "gpsrecv",
+            "vendor": "Axis Communications",
+            "embeddedSdkVersion": "2.0",
+            "user": {
+                "group": "root",
+                "username": "root"
+            },
+            "vendorUrl": "\\'''\\",
+            "runMode": "once",
+            "version": "1.2.0"
+        },
+        "copyProtection": {
+            "method": "none"
+        },
+        "configuration": {
+            "settingPage": "main.shtml",
+            "httpConfig": [
+                {
+                    "access": "admin",
+                    "name": "settings/set",
+                    "type": "transferCgi"
+                },
+                {
+                    "access": "viewer",
+                    "name": "settings/get",
+                    "type": "transferCgi"
+                },
+                {
+                    "access": "viewer",
+                    "name": "gps/now",
+                    "type": "transferCgi"
+                },
+                {
+                    "access": "viewer",
+                    "name": "gps/history",
+                    "type": "transferCgi"
+                }
+            ],
+            "paramConfig": [
+                {
+                    "name": "LogInterval",
+                    "default": "10",
+                    "type": "hidden:string"
+                },
+                {
+                    "name": "LogCount",
+                    "default": "720",
+                    "type": "hidden:string"
+                },
+                {
+                    "name": "ApiKey",
+                    "default": "empty",
+                    "type": "hidden:string"
+                },
+                {
+                    "name": "UDPPort",
+                    "default": "8300",
+                    "type": "hidden:string"
+                },
+                {
+                    "name": "EXIFInt",
+                    "default": "5",
+                    "type": "hidden:string"
+                },
+                {
+                    "name": "FTPUser",
+                    "default": "root",
+                    "type": "hidden:string"
+                },
+                {
+                    "name": "FTPPass",
+                    "default": "pass",
+                    "type": "hidden:string"
+                }
+            ]
+        }
+    }
+}
